@@ -10,7 +10,7 @@
     - rspec
     - webmock
     - rubocop
-    - simplecov
+    - simplecov (minimum_coverage line: 80, current coverage: 97.35%)
     - sidekiq
     - sidekiq-cron
     - rswag
