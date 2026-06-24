@@ -21,7 +21,23 @@ See [stack.md](./stack.md).
 
 ## Architecture Decisions
 
-- **Event-based integration (SNS/SQS):** chosen for services that already published domain events, avoiding coupling and extra load on their databases.
+- **Event-based integration (SNS/SQS + Lambda):** used for services that already publish domain events and deal with incremental data. New activity as it happens, processed one event at a time.
+- **Sidekiq for mature services and score calculation:** used where we needed to read data retroactively and in bulk, e.g. pulling 6 months of survey history across all companies, or reprocessing a service after a failure.
 - **Read replica access:** used for services with no event system, keeping reads isolated from their primary DB.
-- **Lambda as Event Processor:** stateless, scales automatically with SQS volume, no infrastructure to manage.
-- **Sidekiq for score recalculation:** async processing with built-in retry, better observability than Lambda for stateful aggregation jobs.
+- **Lambda as Event Processor:** stateless, scales automatically with SQS volume, no infrastructure to manage for the incremental path.
+
+## My Role
+
+I was the Tech Lead on this project. It was my second time in that role, leading a team of 3 developers. I worked with the architect on every major architectural decision, ran the database analysis that shaped the primary/replica split, owned the technical decisions behind the integration patterns, and built the CI/CD pipeline.
+
+## CI/CD
+
+GitLab CI pipeline with four stages, run on every push: Rubocop (style), Brakeman (security scan), RSpec (gated at 80% minimum coverage, currently at 97.35%), and deploy to ECS.
+
+## Scalability & Resilience
+
+The hardest call was deciding, per upstream service, which integration path to use:
+
+- SNS/SQS + Lambda for services that already publish domain events and only need incremental data. It gives fan-out and retry, and absorbs traffic spikes without adding load to the source DB.
+- Sidekiq for services where we need retroactive, bulk reads and heavy processing to calculate scores.
+- Direct read replica for services with no event system at all. It avoids asking other teams to build event publishing just for us, at the cost of tighter coupling to their schema and some read staleness.
