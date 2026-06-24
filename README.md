@@ -10,7 +10,7 @@ For each product area, the system outputs a score and a set of actionable recomm
 
 Data is collected from other microservices through two integration paths: event-based (SNS/SQS) and direct read replica access. An AWS Lambda processes and normalizes incoming events, forwarding them to the Rails API. Background jobs handle async score recalculation via Sidekiq, ensuring scores are always up to date as new activity comes in.
 
-- [Database](./database.md)
+- [Database](./database.md) - start here
 - [Models](./models.md)
 - [Services](./services.md)
 - [Jobs](./jobs.md)

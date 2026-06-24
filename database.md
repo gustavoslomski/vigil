@@ -57,7 +57,7 @@ db/
 
 
 ```
-// you can use rails --t to show all tasks
+// you can use rails --tasks to show all tasks
 rails db:create
 rails db:schema:load:surveys
 ```
