@@ -1,5 +1,7 @@
 # Project Overview
 
+![Architecture](./architecture.drawio.svg)
+
 This microservice evaluates how productively an HR team is using the platform. It collects indices from multiple internal services and computes a score per product area — if a team runs few surveys, for example, their people management score reflects that.
 
 For each product area, the system outputs a score and a set of actionable recommendations, telling the HR team exactly what they should do to improve it. The goal is to give HR managers a clear picture of where they are underutilizing the platform and what actions would move the needle.
